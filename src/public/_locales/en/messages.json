@@ -37,6 +37,18 @@
   "email": {
     "message": "Email"
   },
+  "accountName": {
+    "message": "Account Name"
+  },
+  "createAccount": {
+    "message": "Create Account"
+  },
+  "selectAccount": {
+    "message": "Select Account"
+  },
+  "addAccount": {
+    "message": "Add New Account"
+  },
   "password": {
     "message": "Password"
   },

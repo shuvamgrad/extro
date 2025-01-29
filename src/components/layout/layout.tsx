@@ -1,12 +1,9 @@
 import { StorageKey, useStorage } from "@/lib/storage";
 import { supabase } from "@/lib/supabase";
-import { Theme } from "@/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { ErrorBoundary } from "~/components/common/error-boundary";
 import { Suspense } from "~/components/common/suspense";
-import { Footer } from "~/components/layout/footer";
-import { Header } from "~/components/layout/header";
 import { Toaster } from "~/components/ui/sonner";
 import { Message } from "~/lib/messaging";
 import { cn } from "~/lib/utils";
@@ -41,7 +38,10 @@ export const Layout = ({
 const LayoutContent = ({
   children,
   className,
-}: { readonly children: React.ReactNode; readonly className?: string }) => {
+}: {
+  readonly children: React.ReactNode;
+  readonly className?: string;
+}) => {
   const { data: theme } = useStorage(StorageKey.THEME);
   const { set: setUser } = useStorage(StorageKey.USER);
 
@@ -59,24 +59,24 @@ const LayoutContent = ({
   return (
     <div
       className={cn(
-        "flex min-h-screen bg-background text-foreground w-full min-w-[23rem] flex-col items-center justify-center font-sans text-base",
+        "flex min-h-screen bg-background text-foreground w-full min-w-[23rem] flex-col items-center justify-center text-base font-anon",
         {
-          dark:
-            theme === Theme.DARK ||
-            (theme === Theme.SYSTEM &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches),
-        },
+          dark: true,
+          // theme === Theme.DARK ||
+          // (theme === Theme.SYSTEM &&
+          //   window.matchMedia("(prefers-color-scheme: dark)").matches),
+        }
       )}
     >
       <div
         className={cn(
           "flex w-full max-w-[80rem] grow flex-col items-center justify-between gap-12 p-5",
-          className,
+          className
         )}
       >
-        <Header />
+        {/* <Header /> */}
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </div>
       <Toaster />
     </div>

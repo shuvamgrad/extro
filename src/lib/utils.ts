@@ -18,8 +18,8 @@ export const getName = (user: User) => {
   return typeof name === "string"
     ? name
     : nameFromEmail
-      ? nameFromEmail
-      : undefined;
+    ? nameFromEmail
+    : undefined;
 };
 
 export const getAvatar = (user: User) => {
@@ -28,4 +28,10 @@ export const getAvatar = (user: User) => {
   const avatar: unknown = identity?.avatar_url || user.user_metadata.avatar_url;
 
   return typeof avatar === "string" ? avatar : undefined;
+};
+
+export const getUserID = (user: User) => {
+  const id = user.identities?.[0]?.id;
+
+  return typeof id === "string" ? id : undefined;
 };
