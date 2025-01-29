@@ -6,7 +6,7 @@ import {
   RouterProvider,
   createHashRouter,
 } from "react-router-dom";
-import { Account, CreateAccount } from "./account";
+import { Account } from "./account";
 
 const router = createHashRouter([
   {
@@ -21,10 +21,6 @@ const router = createHashRouter([
       {
         path: "account",
         element: <Account />,
-      },
-      {
-        path: "create-account",
-        element: <CreateAccount />,
       },
     ],
   },

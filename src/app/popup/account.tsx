@@ -30,11 +30,3 @@ export const Account = () => {
     </Layout>
   );
 };
-
-export const CreateAccount = () => {
-  return (
-    <Layout>
-      <Wallet.CreateAccount />
-    </Layout>
-  );
-};
