@@ -1,8 +1,48 @@
 import { Button } from "@/components/ui/button";
+import { getBaseWallet } from "@/lib/dnetWallet";
+import type { AccountData } from "@/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ArrowDownLeft, ArrowUpRight, DollarSign } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Card, CardContent } from "~/components/ui/card";
+import { Message, sendMessage } from "~/lib/messaging";
 
 const BalanceView = () => {
+  const { data: current_account } = useQuery({
+    queryKey: [Message.ACCOUNT],
+    queryFn: () => sendMessage(Message.ACCOUNT, undefined),
+  });
+  const [account, setAccount] = useState(current_account);
+
+  useEffect(() => {
+    if (!account) return;
+    mutate(account);
+  }, [account]);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (account: AccountData) => {
+      // const { data: current_account } = useQuery({
+      //   queryKey: [Message.ACCOUNT],
+      //   queryFn: () => sendMessage(Message.ACCOUNT, undefined),
+      // });
+      // console.log("current_account", current_account);
+      const privatekey = account?.secretKey;
+      if (!privatekey) return null;
+      console.log("privatekey", privatekey);
+      const wallet = getBaseWallet();
+      await wallet.load(privatekey);
+
+      const balance = await wallet.getBalance();
+      console.log("balance", balance);
+
+      console.log(wallet);
+    },
+    onError: (error) => toast.error(error.message),
+    onSuccess: () => {
+      toast.success("Account created successfully");
+    },
+  });
   return (
     <Card className="bg-dark-900 border-dark-700 border-green-600 text-white">
       <div className="flex space-y-1.5 p-6 space-x-2">
