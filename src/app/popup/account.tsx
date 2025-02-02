@@ -1,6 +1,8 @@
-import { Menu, Pencil, Plus, Search } from "lucide-react";
-import { Layout } from "~/components/layout/layout";
+import { useQueryClient } from "@tanstack/react-query";
+import { Menu, Plus } from "lucide-react";
+import { Sheet, SheetContent, SheetTitle } from "~/components/ui/sheet";
 import { Wallet } from "~/components/wallet";
+import { Message } from "~/lib/messaging";
 
 const AccountHeader = () => {
   return (
@@ -11,9 +13,12 @@ const AccountHeader = () => {
           <Wallet.Account />
         </div>
         <div className="flex space-x-4">
-          <Search className="w-5 h-5 cursor-pointer" />
-          <Pencil className="w-5 h-5 cursor-pointer" />
-          <Plus className="w-5 h-5 cursor-pointer" />
+          <a
+            href="popup.html#add-options"
+            className="underline hover:no-underline"
+          >
+            <Plus className="w-5 h-5 cursor-pointer" />
+          </a>
         </div>
       </div>
     </div>
@@ -22,11 +27,34 @@ const AccountHeader = () => {
 
 export const Account = () => {
   return (
-    <Layout>
-      <div className="w-[23rem] px-4">
-        <AccountHeader />
-        <Wallet.CryptoDashboard />
-      </div>
-    </Layout>
+    <div className="w-[23rem] px-4">
+      <AccountHeader />
+      <Wallet.CryptoDashboard />
+    </div>
+  );
+};
+
+export const AccountOptions = () => {
+  return <Wallet.AddOptions />;
+};
+
+export const CreateAccount = () => {
+  const queryClient = useQueryClient();
+  const handleCreateAccount = () => {
+    queryClient.invalidateQueries({
+      queryKey: [Message.ACCOUNT],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [Message.ACCOUNTS],
+    });
+    window.location.hash = "#account";
+  };
+  return (
+    <Sheet open={true} onOpenChange={handleCreateAccount}>
+      <SheetContent side="bottom">
+        <SheetTitle>Create Account</SheetTitle>
+        <Wallet.CreateAccount onClose={() => handleCreateAccount()} />
+      </SheetContent>
+    </Sheet>
   );
 };

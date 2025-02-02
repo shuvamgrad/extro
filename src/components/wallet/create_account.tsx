@@ -56,7 +56,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ onClose }) => {
     },
     onError: (error) => toast.error(error.message),
     onSuccess: () => {
-      window.location.hash = "#account";
       onClose();
     },
   });
@@ -96,16 +95,6 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ onClose }) => {
             browser.i18n.getMessage("createAccount")
           )}
         </Button>
-
-        {/* <Button
-          type="button"
-          variant="destructive"
-          onClick={onClose}
-          className="w-full bg-green-900"
-          disabled={isPending}
-        >
-          Close
-        </Button> */}
       </form>
     </Form>
   );

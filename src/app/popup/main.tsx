@@ -6,7 +6,8 @@ import {
   RouterProvider,
   createHashRouter,
 } from "react-router-dom";
-import { Account } from "./account";
+import { Layout } from "~/components/layout/layout";
+import { Account, AccountOptions, CreateAccount } from "./account";
 
 const router = createHashRouter([
   {
@@ -22,12 +23,22 @@ const router = createHashRouter([
         path: "account",
         element: <Account />,
       },
+      {
+        path: "add-options",
+        element: <AccountOptions />,
+      },
+      {
+        path: "create-account",
+        element: <CreateAccount />,
+      },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Layout>
+      <RouterProvider router={router} />
+    </Layout>
   </React.StrictMode>
 );
