@@ -15,15 +15,15 @@ import { Message, sendMessage } from "~/lib/messaging";
 import { StorageKey, useStorage } from "~/lib/storage";
 import { CreateAccount } from "./create_account";
 
-export function Account() {
+interface AccountHeaderProps {
+  readonly current_account: AccountData | null | undefined;
+}
+
+export const Account = ({ current_account }: AccountHeaderProps) => {
   const queryClient = useQueryClient();
   const { data: accounts } = useQuery({
     queryKey: [Message.ACCOUNTS],
     queryFn: () => sendMessage(Message.ACCOUNTS, undefined),
-  });
-  const { data: current_account } = useQuery({
-    queryKey: [Message.ACCOUNT],
-    queryFn: () => sendMessage(Message.ACCOUNT, undefined),
   });
   const { set: setAccount } = useStorage(StorageKey.ACCOUNT);
 
@@ -84,4 +84,4 @@ export function Account() {
       </Sheet>
     </>
   );
-}
+};

@@ -1,11 +1,14 @@
-import DnetWallet from "./wallet";
 import DnetWalletAdapter from "./adapter";
 import { initialize } from "./initialize";
+import SecureWallet from "./wallet";
 
-
-function getBaseWallet(): DnetWallet {
-  return new DnetWallet();
+function getBaseWallet(): SecureWallet {
+  return new SecureWallet();
 }
 
-
-export { DnetWallet, DnetWalletAdapter, initialize, getBaseWallet };
+export {
+  SecureWallet as DnetWallet,
+  DnetWalletAdapter,
+  initialize,
+  getBaseWallet,
+};

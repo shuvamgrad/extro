@@ -1,7 +1,7 @@
 import { Download, Eye, Key, Plus } from "lucide-react";
 import type * as React from "react";
 
-export function AddOptions() {
+export const AddOptions = () => {
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -38,7 +38,7 @@ export function AddOptions() {
       </div>
     </div>
   );
-}
+};
 
 interface AccountOptionProps {
   icon: React.ReactNode;

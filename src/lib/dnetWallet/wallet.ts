@@ -11,7 +11,13 @@ import type {
   SolanaSignTransactionOutput,
 } from "@solana/wallet-standard";
 import { SOLANA_CHAINS, getEndpointForChain } from "@solana/wallet-standard";
-import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  Transaction,
+} from "@solana/web3.js";
 import type {
   ConnectFeature,
   EventsFeature,
@@ -87,7 +93,7 @@ async function loadWallet(privateKeyBase58: string | null): Promise<Keypair> {
   }
 }
 
-export class DnetWallet extends AbstractWallet implements Wallet {
+export class SecureWallet extends AbstractWallet implements Wallet {
   protected declare _accounts: PossiblyLedgerWalletAccount[];
 
   #name = "Dnet Wallet" as const;
@@ -112,25 +118,10 @@ export class DnetWallet extends AbstractWallet implements Wallet {
     return SOLANA_CHAINS.slice();
   }
 
-  get publicKey() {
-    if (this._accounts.length === 0) {
-      return null;
-    }
-    console.log("accounts:", this._accounts);
-    console.log("accounts:", this._accounts[0]);
-    console.log("accounts:", this._accounts[0]?.publicKey);
-    return this._accounts[0]?.publicKey;
-  }
-
   getPublicKey = () => {
-    console.log("accounts:", this._accounts);
-    console.log("accounts:", this._accounts[0]);
     if (this._accounts.length === 0) {
       return null;
     }
-    console.log("accounts:", this._accounts);
-    console.log("accounts:", this._accounts[0]);
-    console.log("accounts:", this._accounts[0]?.publicKey);
     return this._accounts[0]?.publicKey;
   };
 
@@ -205,7 +196,7 @@ export class DnetWallet extends AbstractWallet implements Wallet {
       // }),
     ]);
 
-    if (new.target === DnetWallet) {
+    if (new.target === SecureWallet) {
       Object.freeze(this);
     }
 
@@ -304,9 +295,10 @@ export class DnetWallet extends AbstractWallet implements Wallet {
         "Wallet is not available. Please initialize the wallet first."
       );
     }
-    return new Connection(RPC_URLS[rpcNet]).getBalance(
+    const lamportBalance = await new Connection(RPC_URLS[rpcNet]).getBalance(
       new PublicKey(publicKey)
     );
+    return lamportBalance / LAMPORTS_PER_SOL;
   };
 
   #signAndSendTransaction: SolanaSignAndSendTransactionMethod = async (
@@ -483,4 +475,4 @@ export class DnetWallet extends AbstractWallet implements Wallet {
   };
 }
 
-export default DnetWallet;
+export default SecureWallet;

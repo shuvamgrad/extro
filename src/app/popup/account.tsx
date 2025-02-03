@@ -1,16 +1,21 @@
-import { useQueryClient } from "@tanstack/react-query";
+import type { AccountData } from "@/types";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Menu, Plus } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "~/components/ui/sheet";
 import { Wallet } from "~/components/wallet";
-import { Message } from "~/lib/messaging";
+import { Message, sendMessage } from "~/lib/messaging";
 
-const AccountHeader = () => {
+interface AccountHeaderProps {
+  readonly current_account: AccountData | null | undefined;
+}
+
+const AccountHeader = ({ current_account }: AccountHeaderProps) => {
   return (
     <div className="pb-2 bg-dark-900 border-dark-700 text-white">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
           <Menu className="w-5 h-5 cursor-pointer mr-2" />
-          <Wallet.Account />
+          <Wallet.Account current_account={current_account} />
         </div>
         <div className="flex space-x-4">
           <a
@@ -26,10 +31,15 @@ const AccountHeader = () => {
 };
 
 export const Account = () => {
+  const { data: current_account } = useQuery({
+    queryKey: [Message.ACCOUNT],
+    queryFn: () => sendMessage(Message.ACCOUNT, undefined),
+  });
+  if (!current_account) return <Wallet.AddOptions />;
   return (
     <div className="w-[23rem] px-4">
-      <AccountHeader />
-      <Wallet.CryptoDashboard />
+      <AccountHeader current_account={current_account} />
+      <Wallet.CryptoDashboard current_acccount={current_account} />
     </div>
   );
 };

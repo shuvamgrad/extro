@@ -1,54 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { getBaseWallet } from "@/lib/dnetWallet";
 import type { AccountData } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { ArrowDownLeft, ArrowUpRight, DollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { Card, CardContent } from "~/components/ui/card";
-import { Message, sendMessage } from "~/lib/messaging";
+import {} from "~/lib/messaging";
+import { AddOptions } from "./add_options";
 
-const BalanceView = () => {
-  const { data: current_account } = useQuery({
-    queryKey: [Message.ACCOUNT],
-    queryFn: () => sendMessage(Message.ACCOUNT, undefined),
-  });
-  const [account, setAccount] = useState(current_account);
+interface BalanceViewProps {
+  balance: number;
+}
 
-  useEffect(() => {
-    if (!account) return;
-    mutate(account);
-  }, [account]);
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (account: AccountData) => {
-      // const { data: current_account } = useQuery({
-      //   queryKey: [Message.ACCOUNT],
-      //   queryFn: () => sendMessage(Message.ACCOUNT, undefined),
-      // });
-      // console.log("current_account", current_account);
-      const privatekey = account?.secretKey;
-      if (!privatekey) return null;
-      console.log("privatekey", privatekey);
-      const wallet = getBaseWallet();
-      await wallet.load(privatekey);
-
-      const balance = await wallet.getBalance();
-      console.log("balance", balance);
-
-      console.log(wallet);
-    },
-    onError: (error) => toast.error(error.message),
-    onSuccess: () => {
-      toast.success("Account created successfully");
-    },
-  });
+const BalanceView = ({ balance }: BalanceViewProps) => {
   return (
     <Card className="bg-dark-900 border-dark-700 border-green-600 text-white">
       <div className="flex space-y-1.5 p-6 space-x-2">
-        <span className="text-4xl font-bold">$0.00</span>
+        <span className="text-4xl font-bold">{`${balance.toFixed(2)}`}</span>
         <span className="flex items-center text-sm w-fit bg-green-800 text-gray-300 py-1.5 px-2">
-          0.00 (+0.00%)
+          {`${balance.toFixed(2)} (+0.00%)`}
         </span>
       </div>
       <CardContent className="flex space-x-4 mt-4">
@@ -71,18 +40,18 @@ const BalanceView = () => {
 
 interface CurrencyItemProps {
   name: string;
-  amount: number;
+  balance: number;
   symbol: string;
   price: number;
 }
 
-const CurrencyItem = ({ name, amount, symbol, price }: CurrencyItemProps) => {
+const CurrencyItem = ({ name, balance, symbol, price }: CurrencyItemProps) => {
   return (
     <Card className="flex justify-between items-center border-green-900 border-spacing-3 bg-green-800 text-white mt-2">
       <div className="flex items-center space-x-3 p-2">
         <span className="text-lg text-green-400 uppercase">{name}</span>
         <p className="text-green-200 text-sm">
-          {amount} {symbol}
+          {balance} {symbol}
         </p>
       </div>
       <div className="text-right bg-green-600 p-2">
@@ -93,14 +62,40 @@ const CurrencyItem = ({ name, amount, symbol, price }: CurrencyItemProps) => {
   );
 };
 
-export const CryptoDashboard = () => {
+interface CryptoDashboardProps {
+  readonly current_acccount: AccountData | null | undefined;
+}
+
+export const CryptoDashboard = ({ current_acccount }: CryptoDashboardProps) => {
+  const [balance, setBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    const loadWallet = async () => {
+      if (!current_acccount) return;
+
+      const privatekey = current_acccount.secretKey;
+      if (!privatekey) return;
+
+      const wallet = getBaseWallet();
+      await wallet.load(privatekey);
+
+      try {
+        const walletBalance = await wallet.getBalance();
+        setBalance(walletBalance);
+      } catch (error) {
+        console.error("Error getting balance:", error);
+      }
+    };
+
+    loadWallet();
+  }, [current_acccount]);
+  if (!current_acccount) return <AddOptions />;
+  if (balance == null) return <div>Loading...</div>;
   return (
     <div className="bg-dark-900 text-white">
-      <BalanceView />
+      <BalanceView balance={balance} />
       <h2 className="text-lg mt-6 uppercase text-gray-300">Currencies</h2>
-      <CurrencyItem name="Solana" amount={0.5} symbol="SOL" price={0.0} />
-      <CurrencyItem name="Ethereum" amount={0.5} symbol="ETH" price={0.0} />
-      <CurrencyItem name="Bitcoin" amount={0.5} symbol="BTC" price={0.0} />
+      <CurrencyItem name="Solana" balance={balance} symbol="SOL" price={0.0} />
     </div>
   );
 };
