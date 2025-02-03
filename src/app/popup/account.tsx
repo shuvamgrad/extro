@@ -44,6 +44,15 @@ export const Account = () => {
   );
 };
 
+export const SendSol = () => {
+  const { data: current_account } = useQuery({
+    queryKey: [Message.ACCOUNT],
+    queryFn: () => sendMessage(Message.ACCOUNT, undefined),
+  });
+  if (!current_account) return <Wallet.AddOptions />;
+  return <Wallet.Send />;
+};
+
 export const AccountOptions = () => {
   return <Wallet.AddOptions />;
 };

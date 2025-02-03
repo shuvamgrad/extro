@@ -4,7 +4,6 @@ import type { AccountData } from "@/types";
 import { ArrowDownLeft, ArrowUpRight, DollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "~/components/ui/card";
-import {} from "~/lib/messaging";
 import { AddOptions } from "./add_options";
 
 interface BalanceViewProps {
@@ -12,6 +11,9 @@ interface BalanceViewProps {
 }
 
 const BalanceView = ({ balance }: BalanceViewProps) => {
+  const handleSendSol = () => {
+    window.location.hash = "send-sol";
+  };
   return (
     <Card className="bg-dark-900 border-dark-700 border-green-600 text-white">
       <div className="flex space-y-1.5 p-6 space-x-2">
@@ -21,7 +23,10 @@ const BalanceView = ({ balance }: BalanceViewProps) => {
         </span>
       </div>
       <CardContent className="flex space-x-4 mt-4">
-        <Button className="bg-green-700 flex items-center px-2 py-1">
+        <Button
+          className="bg-green-700 flex items-center px-2 py-1"
+          onClick={handleSendSol}
+        >
           SEND
           <ArrowUpRight className="ml-2" />
         </Button>

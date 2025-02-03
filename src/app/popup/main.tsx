@@ -7,7 +7,7 @@ import {
   createHashRouter,
 } from "react-router-dom";
 import { Layout } from "~/components/layout/layout";
-import { Account, AccountOptions, CreateAccount } from "./account";
+import { Account, AccountOptions, CreateAccount, SendSol } from "./account";
 
 const router = createHashRouter([
   {
@@ -30,6 +30,10 @@ const router = createHashRouter([
       {
         path: "create-account",
         element: <CreateAccount />,
+      },
+      {
+        path: "send-sol",
+        element: <SendSol />,
       },
     ],
   },
