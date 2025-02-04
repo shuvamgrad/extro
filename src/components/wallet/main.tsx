@@ -14,6 +14,9 @@ const BalanceView = ({ balance }: BalanceViewProps) => {
   const handleSendSol = () => {
     window.location.hash = "send-sol";
   };
+  const handleReceiveSol = () => {
+    window.location.hash = "receive-sol";
+  };
   return (
     <Card className="bg-dark-900 border-dark-700 border-green-600 text-white">
       <div className="flex space-y-1.5 p-6 space-x-2">
@@ -30,7 +33,10 @@ const BalanceView = ({ balance }: BalanceViewProps) => {
           SEND
           <ArrowUpRight className="ml-2" />
         </Button>
-        <Button className="bg-green-700 flex items-center px-2 py-1">
+        <Button
+          className="bg-green-700 flex items-center px-2 py-1"
+          onClick={handleReceiveSol}
+        >
           RECEIVE
           <ArrowDownLeft className="ml-2" />
         </Button>

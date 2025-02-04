@@ -1,3 +1,5 @@
+import { sendSol } from "@/lib/keys";
+import type { AccountData } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, CircleCheckBig } from "lucide-react";
 import { useState } from "react";
@@ -26,7 +28,11 @@ const sendSchema = z.object({
 
 type SendData = z.infer<typeof sendSchema>;
 
-export const Send = () => {
+interface SendProps {
+  readonly account: AccountData;
+}
+
+export const Send = ({ account: current_acccount }: SendProps) => {
   const [confirmTransaction, setConfirmTransaction] = useState(false);
   const [confirmedTransaction, setConfirmedTransaction] = useState(false);
   const defaultValues: SendData = {
@@ -59,6 +65,24 @@ export const Send = () => {
   };
 
   const handleTransactionConfirmed = () => {
+    const sendWalletSol = async () => {
+      if (!current_acccount) return;
+
+      const privatekey = current_acccount.secretKey;
+      if (!privatekey) return;
+
+      try {
+        const signature = await sendSol(
+          privatekey,
+          transactionData.address,
+          Number(transactionData.amount)
+        );
+        console.log("Transaction signature:", signature);
+      } catch (error) {
+        console.error("Error send sol:", error);
+      }
+    };
+    sendWalletSol();
     setConfirmedTransaction(true);
   };
 
@@ -194,7 +218,9 @@ export const ConfirmSendSol = ({
       <div className="bg-green-900 border border-green-600 rounded-lg p-4 text-sm text-white space-y-3">
         <div className="flex justify-between">
           <span className="text-gray-400">To</span>
-          <span className="truncate">{address}</span>
+          <span className="truncate">{`${address.slice(0, 6)}...${address.slice(
+            -6
+          )}`}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-400">Network</span>
@@ -243,7 +269,9 @@ export const TransactionDone = ({ amount, address }: SendData) => {
       <div className="bg-green-900 border border-green-600 rounded-lg p-4 text-sm text-white space-y-3">
         <div className="flex justify-between">
           <span className="text-gray-400">To</span>
-          <span className="truncate">{address}</span>
+          <span className="truncate">{`${address.slice(0, 6)}...${address.slice(
+            -6
+          )}`}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-400">Amount</span>
@@ -258,7 +286,7 @@ export const TransactionDone = ({ amount, address }: SendData) => {
           className="w-full mt-2"
           onClick={onDone}
         >
-          AWESOME
+          BACK TO DASHBOARD
         </Button>
       </div>
     </div>

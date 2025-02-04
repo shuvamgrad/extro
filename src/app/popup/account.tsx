@@ -50,7 +50,16 @@ export const SendSol = () => {
     queryFn: () => sendMessage(Message.ACCOUNT, undefined),
   });
   if (!current_account) return <Wallet.AddOptions />;
-  return <Wallet.Send />;
+  return <Wallet.Send account={current_account} />;
+};
+
+export const ReceiveSol = () => {
+  const { data: current_account } = useQuery({
+    queryKey: [Message.ACCOUNT],
+    queryFn: () => sendMessage(Message.ACCOUNT, undefined),
+  });
+  if (!current_account) return <Wallet.AddOptions />;
+  return <Wallet.ReceiveSol address={current_account.publicKey} />;
 };
 
 export const AccountOptions = () => {
