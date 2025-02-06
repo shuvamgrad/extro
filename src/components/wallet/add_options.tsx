@@ -21,7 +21,7 @@ export const AddOptions = () => {
           icon={<Key />}
           title="IMPORT PRIVATE KEY"
           description="Import a single-chain account"
-          url="popup.html#create-account"
+          url="popup.html#import-account"
         />
         <AccountOption
           icon={<Download />}

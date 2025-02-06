@@ -11,6 +11,7 @@ import {
   Account,
   AccountOptions,
   CreateAccount,
+  ImportAccount,
   ReceiveSol,
   SendSol,
 } from "./account";
@@ -40,6 +41,10 @@ const router = createHashRouter([
       {
         path: "send-sol",
         element: <SendSol />,
+      },
+      {
+        path: "import-account",
+        element: <ImportAccount />,
       },
       {
         path: "receive-sol",

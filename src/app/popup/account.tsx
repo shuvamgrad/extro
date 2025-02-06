@@ -86,3 +86,24 @@ export const CreateAccount = () => {
     </Sheet>
   );
 };
+
+export const ImportAccount = () => {
+  const queryClient = useQueryClient();
+  const handleImportAccount = () => {
+    queryClient.invalidateQueries({
+      queryKey: [Message.ACCOUNT],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [Message.ACCOUNTS],
+    });
+    window.location.hash = "#account";
+  };
+  return (
+    <Sheet open={true} onOpenChange={handleImportAccount}>
+      <SheetContent side="bottom">
+        <SheetTitle>Import Account</SheetTitle>
+        <Wallet.ImportAccount onClose={() => handleImportAccount()} />
+      </SheetContent>
+    </Sheet>
+  );
+};

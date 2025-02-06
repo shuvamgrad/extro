@@ -25,6 +25,19 @@ const RPC_URLS = {
 
 const connection = new web3.Connection(RPC_URLS.devnet, "confirmed");
 
+export function getKeyPairFromSK(secretKey: string): {
+  publicKey: string;
+  secretKey: string;
+} {
+  const secretKey_obj = bs58.decode(secretKey);
+  const keypair = web3.Keypair.fromSecretKey(secretKey_obj);
+  const publicKeyBase58 = keypair.publicKey.toBase58();
+  return {
+    publicKey: publicKeyBase58,
+    secretKey: secretKey,
+  };
+}
+
 export async function sendSol(
   from_privateKey: string,
   to_publicKey: string,

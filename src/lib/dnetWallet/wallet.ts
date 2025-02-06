@@ -57,6 +57,11 @@ interface SolanaLedgerApp {
   signTransaction(transaction: ReadonlyUint8Array): Promise<Uint8Array>;
 }
 
+export interface TokenAccountProps {
+  address: string;
+  balance: number;
+}
+
 async function createWallet(): Promise<Keypair> {
   const keypair = Keypair.generate();
 
@@ -299,6 +304,37 @@ export class SecureWallet extends AbstractWallet implements Wallet {
       new PublicKey(publicKey)
     );
     return lamportBalance / LAMPORTS_PER_SOL;
+  };
+
+  getTokenBalance = async (rpcNet: "mainnet" | "devnet" = "devnet") => {
+    const publicKey = this.getPublicKey();
+    console.log("publicKey", publicKey);
+    if (publicKey == null) {
+      throw new Error(
+        "Wallet is not available. Please initialize the wallet first."
+      );
+    }
+    const PK = new PublicKey(publicKey);
+    const address = new PublicKey(
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    );
+    const tokenAccounts = await new Connection(
+      RPC_URLS[rpcNet]
+    ).getParsedTokenAccountsByOwner(PK, {
+      programId: address,
+    });
+    const tokenAccountsValue = tokenAccounts.value;
+    const tokenAccountsArray = [];
+    for (const tokenAccount of tokenAccountsValue) {
+      console.log("tokenAccount", tokenAccount);
+      const tokenAccountData: TokenAccountProps = {
+        balance: tokenAccount.account.data.parsed.info.tokenAmount.uiAmount,
+        address: tokenAccount.account.data.parsed.info.mint,
+      };
+
+      tokenAccountsArray.push(tokenAccountData);
+    }
+    return tokenAccountsArray;
   };
 
   #signAndSendTransaction: SolanaSignAndSendTransactionMethod = async (

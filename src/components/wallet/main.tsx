@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getBaseWallet } from "@/lib/dnetWallet";
+import type { TokenAccountProps } from "@/lib/dnetWallet/wallet";
 import type { AccountData } from "@/types";
 import { ArrowDownLeft, ArrowUpRight, DollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -77,8 +78,14 @@ interface CryptoDashboardProps {
   readonly current_acccount: AccountData | null | undefined;
 }
 
+// export interface TokenAccountProps {
+//   address: string;
+//   balance: number;
+// }
+
 export const CryptoDashboard = ({ current_acccount }: CryptoDashboardProps) => {
   const [balance, setBalance] = useState<number | null>(null);
+  const [tokenAccount, setTokenAccount] = useState<TokenAccountProps[]>([]);
 
   useEffect(() => {
     const loadWallet = async () => {
@@ -93,6 +100,8 @@ export const CryptoDashboard = ({ current_acccount }: CryptoDashboardProps) => {
       try {
         const walletBalance = await wallet.getBalance();
         setBalance(walletBalance);
+        const tokenAccounts = await wallet.getTokenBalance();
+        setTokenAccount(tokenAccounts);
       } catch (error) {
         console.error("Error getting balance:", error);
       }
@@ -107,6 +116,15 @@ export const CryptoDashboard = ({ current_acccount }: CryptoDashboardProps) => {
       <BalanceView balance={balance} />
       <h2 className="text-lg mt-6 uppercase text-gray-300">Currencies</h2>
       <CurrencyItem name="Solana" balance={balance} symbol="SOL" price={0.0} />
+      {tokenAccount.map((token) => (
+        <CurrencyItem
+          key={token.address.slice(0, 6)}
+          name={`${token.address.slice(0, 3)}-SPL`}
+          balance={token.balance}
+          symbol={token.address.slice(0, 6)}
+          price={0.0}
+        />
+      ))}
     </div>
   );
 };
