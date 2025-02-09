@@ -1,6 +1,9 @@
+import { getBaseWallet } from "@/lib/dnetWallet";
+import type { TokenAccountProps } from "@/lib/dnetWallet/wallet";
 import type { AccountData } from "@/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Menu, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTitle } from "~/components/ui/sheet";
 import { Wallet } from "~/components/wallet";
 import { Message, sendMessage } from "~/lib/messaging";
@@ -31,15 +34,67 @@ const AccountHeader = ({ current_account }: AccountHeaderProps) => {
 };
 
 export const Account = () => {
-  const { data: current_account } = useQuery({
+  const [walletTokenAccounts, setWalletTokenAccounts] = useState<
+    TokenAccountProps[]
+  >([]);
+  const [selectedToken, setSelectedToken] = useState<TokenAccountProps | null>(
+    null
+  );
+  const { data: current_account, isLoading } = useQuery({
     queryKey: [Message.ACCOUNT],
     queryFn: () => sendMessage(Message.ACCOUNT, undefined),
   });
-  if (!current_account) return <Wallet.AddOptions />;
+  useEffect(() => {
+    const loadWallet = async () => {
+      if (!current_account?.secretKey) return;
+
+      const wallet = getBaseWallet();
+      await wallet.load(current_account.secretKey);
+
+      try {
+        const walletBalance = await wallet.getBalance();
+        const solAccountData: TokenAccountProps = {
+          balance: walletBalance,
+          name: "solana",
+          address: "solana",
+        };
+        const tokenAccounts = await wallet.getTokenBalance();
+        setWalletTokenAccounts([solAccountData, ...tokenAccounts]);
+      } catch (error) {
+        console.error("Error getting balance:", error);
+      }
+    };
+
+    loadWallet();
+  }, [current_account]);
+
+  const handleSelectedToken = (token: TokenAccountProps) => {
+    console.log("Token selected:", token);
+    setSelectedToken(token);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-[23rem] px-4">
-      <AccountHeader current_account={current_account} />
-      <Wallet.CryptoDashboard current_acccount={current_account} />
+      {!current_account ? (
+        <Wallet.AddOptions />
+      ) : selectedToken ? (
+        <Wallet.CurrencyItemDetails
+          token={selectedToken}
+          onBack={() => setSelectedToken(null)}
+        />
+      ) : (
+        <>
+          <AccountHeader current_account={current_account} />
+          <Wallet.CryptoDashboard
+            token_accounts={walletTokenAccounts}
+            onTokenSelect={handleSelectedToken}
+          />
+        </>
+      )}
     </div>
   );
 };

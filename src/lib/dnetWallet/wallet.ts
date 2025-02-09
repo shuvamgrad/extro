@@ -59,6 +59,7 @@ interface SolanaLedgerApp {
 
 export interface TokenAccountProps {
   address: string;
+  name: string;
   balance: number;
 }
 
@@ -326,15 +327,27 @@ export class SecureWallet extends AbstractWallet implements Wallet {
     const tokenAccountsValue = tokenAccounts.value;
     const tokenAccountsArray = [];
     for (const tokenAccount of tokenAccountsValue) {
+      const tokenMint = tokenAccount.account.data.parsed.info.mint;
+      console.log("mint:", tokenMint);
+      // const dexData = await this.getTokenValueFromMint(tokenMint);
       console.log("tokenAccount", tokenAccount);
       const tokenAccountData: TokenAccountProps = {
         balance: tokenAccount.account.data.parsed.info.tokenAmount.uiAmount,
-        address: tokenAccount.account.data.parsed.info.mint,
+        name: tokenMint.slice(0, 6),
+        address: tokenMint,
       };
 
       tokenAccountsArray.push(tokenAccountData);
     }
     return tokenAccountsArray;
+  };
+
+  getTokenValueFromMint = async (mint: string) => {
+    const dexUrl = `https://api.dexscreener.com/latest/dex/tokens/${mint}`;
+    const dexResponse = await fetch(dexUrl);
+    const dexData = await dexResponse.json();
+    console.log("dexData:", dexData);
+    return dexData["pairs"];
   };
 
   #signAndSendTransaction: SolanaSignAndSendTransactionMethod = async (
