@@ -50,6 +50,10 @@ const router = createHashRouter([
         path: "receive-sol",
         element: <ReceiveSol />,
       },
+      {
+        path: "settings",
+        element: <ReceiveSol />,
+      },
     ],
   },
 ]);

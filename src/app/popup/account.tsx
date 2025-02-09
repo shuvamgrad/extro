@@ -5,6 +5,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Menu, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTitle } from "~/components/ui/sheet";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarTrigger,
+} from "~/components/ui/sidebar";
 import { Wallet } from "~/components/wallet";
 import { Message, sendMessage } from "~/lib/messaging";
 
@@ -17,7 +22,15 @@ const AccountHeader = ({ current_account }: AccountHeaderProps) => {
     <div className="pb-2 bg-dark-900 border-dark-700 text-white">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
-          <Menu className="w-5 h-5 cursor-pointer mr-2" />
+          <Sidebar>
+            <SidebarTrigger asChild>
+              <button type="button" className="p-2 bg-transparent">
+                <Menu className="w-5 h-5 cursor-pointer mr-2" />
+              </button>
+            </SidebarTrigger>
+            <SidebarContent />
+          </Sidebar>
+
           <Wallet.Account current_account={current_account} />
         </div>
         <div className="flex space-x-4">
@@ -32,7 +45,6 @@ const AccountHeader = ({ current_account }: AccountHeaderProps) => {
     </div>
   );
 };
-
 export const Account = () => {
   const [walletTokenAccounts, setWalletTokenAccounts] = useState<
     TokenAccountProps[]
