@@ -11,18 +11,19 @@ import {
   Account,
   AccountOptions,
   CreateAccount,
+  EditAccount,
   ImportAccount,
+  ManageAccounts,
   ReceiveSol,
   SendSol,
+  SettingView,
 } from "./account";
 
 const router = createHashRouter([
   {
-    // You can give a path here if needed, e.g. path: "/"
     element: <Outlet />,
     children: [
       {
-        // Make the default path (index) redirect to "test":
         index: true,
         element: <Navigate to="account" replace />,
       },
@@ -52,7 +53,15 @@ const router = createHashRouter([
       },
       {
         path: "settings",
-        element: <ReceiveSol />,
+        element: <SettingView />,
+      },
+      {
+        path: "manage_account",
+        element: <ManageAccounts />,
+      },
+      {
+        path: "edit_account",
+        element: <EditAccount />,
       },
     ],
   },

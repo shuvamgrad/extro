@@ -1,15 +1,27 @@
-import { Download, Eye, Key, Plus } from "lucide-react";
+import { Download, Eye, Key, Plus, X } from "lucide-react";
 import type * as React from "react";
 
 export const AddOptions = () => {
+  const onCrossClick = () => {
+    window.location.hash = "account";
+  };
   return (
-    <div>
+    <div className="relative p-4">
+      {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-bold tracking-wide text-center flex-grow">
           ADD / CONNECT WALLET
         </h2>
+        <button
+          type="button"
+          onClick={onCrossClick}
+          className="p-1 text-green-400 hover:text-green-300 transition"
+        >
+          <X size={24} />
+        </button>
       </div>
 
+      {/* Account Options */}
       <div className="mt-6 flex flex-col gap-4">
         <AccountOption
           icon={<Plus />}
@@ -56,6 +68,7 @@ const AccountOption = ({
   const handleCreateAccount = (url: string) => {
     window.location.href = url;
   };
+
   return (
     <button
       type="button"
