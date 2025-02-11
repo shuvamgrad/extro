@@ -25,12 +25,13 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
 
   const createChat = (name: string, members: string[]) => {
     const newChat: Chat = {
-      id: crypto.randomUUID(), // or any unique ID generator
+      id: crypto.randomUUID(),
       name,
       members,
       messages: [],
     };
     setChats((prev) => [...prev, newChat]);
+    return newChat;
   };
 
   const addMessage = (chatId: string, sender: string, content: string) => {

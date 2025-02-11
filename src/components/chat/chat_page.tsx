@@ -5,7 +5,6 @@ import { Message, sendMessage } from "~/lib/messaging";
 import { ChatList } from "./chat_list";
 import { ChatView } from "./chat_view";
 import { CreateChat } from "./create_chat";
-// ^ Example placeholder. Adjust to your actual wallet context import.
 
 export const ChatPage: React.FC = () => {
   const [activeView, setActiveView] = useState<"list" | "create" | "view">(
@@ -19,9 +18,9 @@ export const ChatPage: React.FC = () => {
 
   if (!isLoading && current_account === undefined) {
     window.location.hash = "add-options";
-    return;
+    return null;
   }
-  // Suppose your wallet context provides the user's publicKey
+
   const publicKey = current_account?.publicKey;
 
   const handleSelectChat = (chatId: string) => {
@@ -39,7 +38,7 @@ export const ChatPage: React.FC = () => {
   };
 
   return (
-    <div className="w-[400px] h-[600px] flex flex-col bg-white">
+    <div className="w-[23rem] px-4">
       {activeView === "list" && (
         <ChatList
           onSelectChat={handleSelectChat}

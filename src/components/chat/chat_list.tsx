@@ -14,14 +14,14 @@ export const ChatList: React.FC<ChatListProps> = ({
   const { chats } = useChatContext();
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full bg-neutral-900 text-white">
       {/* Header */}
-      <div className="flex justify-between items-center p-3 border-b border-gray-200">
+      <div className="flex justify-between items-center p-3 border-b border-neutral-700">
         <h2 className="text-lg font-semibold">Chats</h2>
         <button
           type="button"
           onClick={onCreateNewChat}
-          className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600"
+          className="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600"
         >
           + New Chat
         </button>
@@ -33,10 +33,11 @@ export const ChatList: React.FC<ChatListProps> = ({
           <li
             key={chat.id}
             onClick={() => onSelectChat(chat.id)}
-            className="p-3 border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+            onKeyUp={() => onSelectChat(chat.id)}
+            className="p-3 border-b border-neutral-800 hover:bg-neutral-800 cursor-pointer"
           >
-            <div className="font-medium">{chat.name}</div>
-            <div className="text-sm text-gray-600">
+            <div className="font-medium text-white">{chat.name}</div>
+            <div className="text-sm text-gray-400">
               {chat.members.length === 1
                 ? "(Private)"
                 : `(${chat.members.length} members)`}
