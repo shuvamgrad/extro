@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { ArrowLeft, Settings } from "lucide-react";
+import { ArrowLeft, MessageCircle, Settings } from "lucide-react";
 import * as React from "react";
 import { cn } from "~/lib/utils";
 
@@ -27,6 +27,9 @@ const SidebarContent = React.forwardRef<
   const onSettingClick = () => {
     window.location.hash = "settings";
   };
+  const onChatClick = () => {
+    window.location.hash = "chat_account";
+  };
 
   return (
     <SidebarPortal>
@@ -52,6 +55,13 @@ const SidebarContent = React.forwardRef<
           onClick={onSettingClick}
         >
           <Settings className="h-6 w-6 text-white" />
+        </button>
+        <button
+          type="button"
+          className="p-2 mb-4 hover:bg-gray-800 rounded-md"
+          onClick={onChatClick}
+        >
+          <MessageCircle className="h-6 w-6 text-white" />
         </button>
       </Dialog.Content>
     </SidebarPortal>

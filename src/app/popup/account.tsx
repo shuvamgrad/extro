@@ -144,13 +144,6 @@ export const ManageAccounts = () => {
   return <Wallet.ManageAccounts onBack={handleOnBack} />;
 };
 
-export const EditAccount = () => {
-  const handleOnBack = () => {
-    window.location.hash = "manage_account";
-  };
-  return <Wallet.EditAccount onBack={handleOnBack} />;
-};
-
 export const CreateAccount = () => {
   const queryClient = useQueryClient();
   const handleCreateAccount = () => {

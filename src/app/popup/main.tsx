@@ -11,13 +11,13 @@ import {
   Account,
   AccountOptions,
   CreateAccount,
-  EditAccount,
   ImportAccount,
   ManageAccounts,
   ReceiveSol,
   SendSol,
   SettingView,
 } from "./account";
+import { ChatApp } from "./chat";
 
 const router = createHashRouter([
   {
@@ -60,8 +60,8 @@ const router = createHashRouter([
         element: <ManageAccounts />,
       },
       {
-        path: "edit_account",
-        element: <EditAccount />,
+        path: "chat_account",
+        element: <ChatApp />,
       },
     ],
   },
